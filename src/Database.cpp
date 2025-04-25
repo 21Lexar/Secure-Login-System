@@ -5,72 +5,82 @@
 using namespace std;
 using namespace filesystem;
 
-path GetPath(){
-  path currentDir = current_path();
-  path outputPath = currentDir.parent_path() / "data";
-  create_directories(outputPath);
-  path filePath = outputPath / "users.txt";
-  return filePath;
-}
+class Database{
+  path filePath;
+public:
+  Database(){
+      path currentDir = current_path();
+      path outputPath = currentDir.parent_path() / "data";
+      create_directories(outputPath);
+      path filePath = outputPath / "users.txt";
 
-void CreateFile(){
-  path filePath = GetPath();
-  ofstream file(filePath);
-  file.close();
-}
-
-void StoreEmail(const string email){
-
-  path filePath = GetPath();
-  if (filesystem::is_empty(filePath)) {
-     ofstream file(filePath, ios::out);
-     file << email <<endl;
-     file.close();
-  } else {
-     ofstream file(filePath, ios::app);
-     file << email << endl;
-     file.close();
-  }
-}
-
-void StorePassword(const string password){
-  path filePath = GetPath();
-  ofstream file(filePath, ios::app);
-  file << password <<endl;
-  file.close();
-}
-
-bool CheckEmail(const string email){
-  path filePath = GetPath();
-  ifstream file(filePath);
-  string line;
-  while (getline(file, line)){
-    if (email == line){
+    void CreateFile(){
+      path filePath = GetPath();
+      ofstream file(filePath);
       file.close();
-      return true;
     }
   }
-  file.close();
-  return false; 
-}
-bool CheckCredentials(const string email ,const string password){
-  path filePath = GetPath();
-  ifstream file(filePath);
-  string line;
-  bool found = false;
-  while(getline(file, line)){
-    if (found){
-      if (password == line){
+
+  path GetPath(){
+    path currentDir = current_path();
+    path outputPath = currentDir.parent_path() / "data";
+    create_directories(outputPath);
+    path filePath = outputPath / "users.txt";
+    return filePath;
+  }
+
+  void StoreEmail(const string email){
+    path filePath = GetPath();
+    if (filesystem::is_empty(filePath)) {
+       ofstream file(filePath, ios::out);
+       file << email <<endl;
+       file.close();
+    } else {
+       ofstream file(filePath, ios::app);
+       file << email << endl;
+       file.close();
+    }
+  }
+
+  void StorePassHash(const string password){
+    path filePath = GetPath();
+    ofstream file(filePath, ios::app);
+    file << password <<endl;
+    file.close();
+  }
+
+  bool CheckEmail(const string email){
+    path filePath = GetPath();
+    ifstream file(filePath);
+    string line;
+    while (getline(file, line)){
+      if (email == line){
         file.close();
         return true;
       }
     }
-    if (email == line){
-      found = true;
-    }
+    file.close();
+    return false;
   }
-  file.close();
-  return false;
+  bool CheckCredentials(const string email ,const string password){
+    path filePath = GetPath();
+    ifstream file(filePath);
+    string line;
+    bool found = false;
+    while(getline(file, line)){
+      if (found){
+        if (password == line){
+          file.close();
+          return true;
+        }
+      }
+      if (email == line){
+        found = true;
+      }
+    }
+    file.close();
+    return false;
+  }
 }
 
 int main(){
