@@ -3,10 +3,10 @@
 using namespace std;
 
 class Encryption {
+    char xorKey = 'P';
     public:
         string toggleEncryption(const string &password) 
-        { 
-            char xorKey = 'P';   
+        {
             string encryptedPassword = password;
             for (size_t i = 0; i < encryptedPassword.length(); i++) 
             { 

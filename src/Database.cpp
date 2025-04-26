@@ -5,7 +5,7 @@
 using namespace std;
 using namespace filesystem;
 
-class Database{
+class Database: public Encryption{
   filesystem::path filePath;
   public:
     Database(){
