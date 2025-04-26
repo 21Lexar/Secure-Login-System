@@ -5,9 +5,8 @@
 using namespace std;
 
 class Encryption {
-    char xorKey;
+    char xorKey = 'P';
     public:
-        string toggleEncryption(const string);
+        string toggleEncryption(const string &password);
 };
-
 #endif

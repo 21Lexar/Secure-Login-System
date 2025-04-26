@@ -2,34 +2,27 @@
 #include<iostream>
 #include<string>
 #include<filesystem>
+#include "../include/Encryption.h"
 using namespace std;
 using namespace filesystem;
 
-class Database: public Encryption{
+class Database {
   filesystem::path filePath;
+  Encryption encrypt;
   public:
     Database(){
         filesystem::path currentDir = current_path();
         filesystem::path outputPath = currentDir.parent_path() / "data";
         create_directories(outputPath);
-        filesystem::path filePath = outputPath / "users.txt";
+        filePath = outputPath / "users.txt";
     }
-    path GetPath(){
-        path currentDir = current_path();
-        path outputPath = currentDir.parent_path() / "data";
-        create_directories(outputPath);
-        path filePath = outputPath / "users.txt";
-        return filePath;
-      }
 
     void CreateFile(){
-      path filePath = GetPath();
       ofstream file(filePath);
       file.close();
     }
 
     void StoreEmail(const string email){
-      path filePath = GetPath();
       if (filesystem::is_empty(filePath)) {
         ofstream file(filePath, ios::out);
         file << email <<endl;
@@ -42,14 +35,12 @@ class Database: public Encryption{
     }
 
   void StorePassHash(const string password){
-    path filePath = GetPath();
     ofstream file(filePath, ios::app);
-    file << password <<endl;
+    file << encrypt.toggleEncryption(password) <<endl;
     file.close();
   }
 
   bool CheckEmail(const string email){
-    path filePath = GetPath();
     ifstream file(filePath);
     string line;
     while (getline(file, line)){
@@ -62,13 +53,12 @@ class Database: public Encryption{
     return false;
   }
   bool CheckCredentials(const string email ,const string password){
-    path filePath = GetPath();
     ifstream file(filePath);
     string line;
     bool found = false;
     while(getline(file, line)){
       if (found){
-        if (password == line){
+        if (encrypt.toggleEncryption(password) == line){
           file.close();
           return true;
         }
@@ -82,16 +72,27 @@ class Database: public Encryption{
   }
 };
 
-int main(){
+int main() {
   Database d;
-  if (d.CheckEmail("gigglesafari@gmail.com")){
-    cout << "Email Found";
-  }else {
-    cout << "Email Not FOund";
+
+  // Create the file and store some test data
+  d.CreateFile();
+  d.StoreEmail("ross@gmail.com");
+  d.StorePassHash("joefraz");
+
+  // Check if the email exists
+  if (d.CheckEmail("ross@gmail.com")) {
+      cout << "Email Found" << endl;
+  } else {
+      cout << "Email Not Found" << endl;
   }
-  if (d.CheckCredentials("gigglesafari@gmail.com", "jaysonbloody")){
-    cout << "Cred found";
-  }else {
-    cout << "Cred not found";
+
+  // Check if the credentials are correct
+  if (d.CheckCredentials("ross@gmail.com", "joefraz")) {
+      cout << "Credentials Found" << endl;
+  } else {
+      cout << "Credentials Not Found" << endl;
   }
+
+  return 0;
 }
