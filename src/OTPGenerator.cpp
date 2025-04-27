@@ -13,6 +13,10 @@ while (da==false) {
 }
 }
 
+unsigned int OTPGenerator::getOTP() const {
+    return otp;
+}
+
 bool OTPGenerator::verifyOTP(unsigned int userOTP) const {
     return otp == userOTP;
 }

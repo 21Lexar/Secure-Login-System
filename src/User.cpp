@@ -10,4 +10,16 @@ class User {
             this->email = email;
             this->passHash = passHash;
         }
+        void setEmail(string email) {
+            this->email = email;
+        }
+        void setPassHash(string passHash) {
+            this->passHash = passHash;
+        }
+        string getEmail() {
+            return email;
+        }
+        string getPassHash() {
+            return passHash;
+        }
 };
