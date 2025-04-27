@@ -1,11 +1,13 @@
 #include <iostream>
 #include <iomanip>  
+#include "OTPGenerator.h"
 using namespace std;
 
 
 void Login() {
     string email, pass;
-    int otp;
+    int userOTP;
+    OTPGenerator otpGen;
     cout << "<---------------------------------------------->" <<endl<<endl;
     cout << "█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█" << endl;
     cout << "█           ENTER YOUR CREDENTIALS            █" << endl;
@@ -14,7 +16,13 @@ void Login() {
     cin >> email;
     cout<< "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"<<endl;
     cout<<"🔐  OTP: ";
-    cin>>otp;
+    cin>>userOTP;
+    if (otpGen.verifyOTP(userOTP)) {
+        cout << "✅  OTP Verified Successfully!" << endl;
+    } else {
+        cout << "❌  Invalid OTP!" << endl;
+        return;
+    }
     cout<< "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"<<endl;
     cout << "🔑  Password: ";
     cin >> pass;
@@ -31,7 +39,8 @@ void Login() {
 
     void Register(){
         string name, mail, password;
-        int otp;
+        int userOTP;
+        OTPGenerator otpGen;
 
         cout << "<---------------------------------------------->" <<endl<<endl;
         cout << "█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█" << endl;
@@ -45,7 +54,13 @@ void Login() {
         cin >> mail;
         cout<< "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"<<endl;
         cout<<"🔐  OTP: ";
-        cin>>otp;
+        cin>>userOTP;
+        if (otpGen.verifyOTP(userOTP)) {
+            cout << "✅  OTP Verified Successfully!" << endl;
+        } else {
+            cout << "❌  Invalid OTP!" << endl;
+            return;
+        }
         cout<< "▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔"<<endl;
         cout << "🔑  Password: ";
         cin >> password;
