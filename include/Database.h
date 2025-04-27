@@ -4,6 +4,7 @@
 #include<string>
 #include<filesystem>
 #include "../include/Encryption.h"
+#pragma once
 using namespace std;
 using namespace filesystem;
 

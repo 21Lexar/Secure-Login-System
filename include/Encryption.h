@@ -1,7 +1,8 @@
 #ifndef ENCRYPTION_H
 #define ENCRYPTION_H
-
+#pragma once
 #include <string>
+
 using namespace std;
 
 class Encryption {
