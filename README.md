@@ -6,13 +6,13 @@ A terminal-based secure login system developed in C++ that allows users to regis
 ## **Preview**
 
 **Options Menu**
-
+![Options Menu Entry Point](/src/IntroSLS.png)
 
 **Login Page**
-
+![Login Menu](/src/LoginSLS.png)
 
 **Signup Page**
-
+![Register Menu](/src/RegisterSLS.png)
 
 ## **Key Features:**
 
