@@ -8,16 +8,18 @@
 #include "../include/Encryption.h"
 #include "../include/OTPGenerator.h"
 
-class LoginManager : public Database, public Encryption {
+class LoginManager : public Database{
 public:
     LoginManager();
     void displayMainMenu();
     void clearScreen();
+    void wait();
     std::string askEmail();
     std::string askPass();
     bool gotOTP();
     void loop();
     void registerUser();
+    void loginUser();
 };
 
 #endif // LOGIN_MANAGER_H

@@ -14,6 +14,11 @@ LoginManager::LoginManager() {
 bool LoginManager::gotOTP(){
     cout << "Did you receive the OTP? (y/n): ";
     string choice;
+    getline(cin,choice);
+    while(choice.empty()){
+        cout << "Did you receive the OTP? (y/n): ";
+        getline(cin,choice);
+    }
     if (choice == "y" || choice == "Y") {
         return true;
     } else if (choice == "n" || choice == "N") {
@@ -44,6 +49,15 @@ void LoginManager::clearScreen() {
         system("cls"); 
     #else
         system("clear"); 
+    #endif
+}
+
+void LoginManager::wait(){
+    #ifdef _WIN32
+        system("pause"); 
+    #else
+        cout << "Press Enter to continue...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     #endif
 }
 
@@ -83,7 +97,7 @@ void LoginManager::loop(){
                 registerUser();
                 break;
             case '2':
-                //loginUser();
+                loginUser();
                 break;
             case '3':
                 cout << "Exiting..." << endl;
@@ -100,7 +114,14 @@ void LoginManager::registerUser(){
     string email, pass, passHash;
     int userOTP;
     clearScreen();
-    cout << "REGISTER" << endl;
+    cout << endl << endl;    
+    cout << "██████╗ ███████╗ ██████╗ ██╗███████╗████████╗███████╗██████╗ "<< endl;
+    cout << "██╔══██╗██╔════╝██╔════╝ ██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗"<< endl;
+    cout << "██████╔╝█████╗  ██║  ███╗██║███████╗   ██║   █████╗  ██████╔╝"<< endl;
+    cout << "██╔══██╗██╔══╝  ██║   ██║██║╚════██║   ██║   ██╔══╝  ██╔══██╗"<< endl;
+    cout << "██║  ██║███████╗╚██████╔╝██║███████║   ██║   ███████╗██║  ██║"<< endl;
+    cout << "╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝"<< endl;
+    cout << endl << endl;                                                         
     email = askEmail();
     CheckEmail(email);
     if (CheckEmail(email)){
@@ -110,23 +131,24 @@ void LoginManager::registerUser(){
         pass = askPass();
         // OTP Functionality
         cout << "Sending OTP to " << email << endl;
+        cout << "OTP: " << otpFunc.getOTP() << endl;
         // sendEmail(email, otpFunc.getOTP());
-        cout << "Enter the OTP sent to your email: ";
-        string strOTP;
-        cin >> strOTP;
-        while(strOTP.empty()){
+        bool otpFlag = gotOTP();
+        if (otpFlag){
             cout << "Enter the OTP sent to your email: ";
-            cin >> strOTP;
-        }
-        userOTP = stoi(strOTP);
-        if (gotOTP()){
+            string strOTP;
+            getline(cin, strOTP);
+            while(strOTP.empty()){
+                cout << "Enter the OTP sent to your email: ";
+                getline(cin, strOTP);
+            }
+            userOTP = stoi(strOTP);
             if (otpFunc.verifyOTP(userOTP)){
-                cout << "OTP verified successfully!" << endl;
-                StoreEmail(email);
-                StorePassHash(pass);
-                cout << "Registration successful!" << endl;
-                // User user(email, passHash);
-                loop();
+                    cout << "OTP verified successfully!" << endl;
+                    StoreEmail(email);
+                    StorePassHash(pass);
+                    cout << "Registration successful!" << endl;
+                    // User user(email, passHash);
             } else {
                 for(int tries = 0; tries <2; tries++){
                     cout << "Invalid OTP. Please try again: ";
@@ -142,9 +164,10 @@ void LoginManager::registerUser(){
                         StorePassHash(pass);
                         cout << "Registration successful!" << endl;
                         // User user(email, passHash);
-                        loop();
+                        wait();
+                        break;
                     } else {
-                        cout << "Invalid OTP. Please try again." << endl;
+                        cout << "Invalid OTP. " << 2-tries<< " tries left."  << endl;
                     }
                 }
             }
@@ -154,3 +177,72 @@ void LoginManager::registerUser(){
     }
 }
 
+void LoginManager::loginUser(){
+    OTPGenerator otpFunc;
+    Encryption encrypt;
+    string email, pass, passHash;
+    int userOTP;
+    clearScreen();
+    cout << endl << endl;
+    cout <<"██╗      ██████╗  ██████╗ ██╗███╗   ██╗"<< endl;
+    cout <<"██║     ██╔═══██╗██╔════╝ ██║████╗  ██║"<< endl;
+    cout <<"██║     ██║   ██║██║  ███╗██║██╔██╗ ██║"<< endl;
+    cout <<"██║     ██║   ██║██║   ██║██║██║╚██╗██║"<< endl;
+    cout <<"███████╗╚██████╔╝╚██████╔╝██║██║ ╚████║"<< endl;
+    cout <<"╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝"<< endl;
+    cout << endl << endl;
+    email = askEmail();
+    if(!CheckEmail(email)){
+        cout << "Error: Email does not exist. Please Register first." << endl;
+    } else {
+        pass = askPass();
+        // OTP Functionality
+        cout << "Sending OTP to " << email << endl;
+        // sendEmail(email, otpFunc.getOTP());
+        cout << "OTP: " << otpFunc.getOTP() << endl;       
+        bool otpFlag = gotOTP();
+        if (otpFlag){
+            cout << "Enter the OTP sent to your email: ";
+            string strOTP;
+            getline(cin, strOTP);
+            while(strOTP.empty()){
+                cout << "Enter the OTP sent to your email: ";
+                getline(cin, strOTP);
+            }
+            userOTP = stoi(strOTP);
+            if (otpFunc.verifyOTP(userOTP)){
+                cout << "OTP verified successfully!" << endl;
+                if(CheckCredentials(email, encrypt.toggleEncryption(pass))){
+                    cout << "Login successful!" << endl;
+                    //postLoginLoop();
+                } else {
+                    cout << "Error: Invalid credentials. Please try again." << endl;
+                }
+            } else {
+                for(int tries = 0; tries <2; tries++){
+                    cout << "Invalid OTP. Please try again: ";
+                    cin >> strOTP;
+                    while(strOTP.empty()){
+                        cout << "Enter the OTP sent to your email: ";
+                        cin >> strOTP;
+                    }
+                    userOTP = stoi(strOTP);
+                    if (otpFunc.verifyOTP(userOTP)){
+                        cout << "OTP verified successfully!" << endl;
+                        StoreEmail(email);
+                        StorePassHash(pass);
+                        cout << "Login successful!" << endl;
+                        // User user(email, passHash);
+                        wait();
+                        break;
+                    } else {
+                        cout << "Invalid OTP. " << 2-tries<< " tries left."  << endl;
+                    }
+                }
+            }
+        } else {
+            cout << "OTP not received. Registration failed." << endl;
+            wait();
+        }
+    }
+}

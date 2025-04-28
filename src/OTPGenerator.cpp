@@ -1,22 +1,22 @@
 #include "../include/OTPGenerator.h"
 
 OTPGenerator::OTPGenerator(){
-unsigned int iseed = (unsigned int)time(NULL);
-srand (iseed);
-bool da=false;
-while (da==false) {
-    if (rand ()%1000000<=999999){
-    otp = rand ()%1000000;
-    da=true;
+    int iseed = (unsigned int)time(NULL);
+    srand (iseed);
+    bool da=false;
+    while (da==false) {
+        if (rand ()%1000000<=999999){
+        otp = rand ()%1000000;
+        da=true;
+        }
+        else da=false;
     }
-    else da=false;
-}
 }
 
-unsigned int OTPGenerator::getOTP() const {
+int OTPGenerator::getOTP() const {
     return otp;
 }
 
-bool OTPGenerator::verifyOTP(unsigned int userOTP) const {
+bool OTPGenerator::verifyOTP(int userOTP) const {
     return otp == userOTP;
 }

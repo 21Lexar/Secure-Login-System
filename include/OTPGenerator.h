@@ -7,11 +7,11 @@
 using namespace std;
 
 class OTPGenerator {
-    unsigned int otp;
+    int otp;
     public:
         OTPGenerator();
-        unsigned int getOTP() const;
-        bool verifyOTP(unsigned int userOTP) const;
+        int getOTP() const;
+        bool verifyOTP(int userOTP) const;
 };
 
 #endif
