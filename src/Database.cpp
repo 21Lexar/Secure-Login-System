@@ -44,41 +44,40 @@ void Database::StorePassHash(const string password){
   file << toggleEncryption(password) <<endl;
 }
 
-bool Database::CheckEmail(const string email){
+bool Database::CheckEmail(const string email) {
   path filePath = GetPath();
   ifstream file(filePath);
-  if(!file) {
-    CheckEmail(email);
+  if (!file.is_open()) {
+      cerr << "Error: Unable to open file for reading email." << endl;
+      return false;
   }
+
   string line;
-  while (getline(file, line)){
-    if (email == line){
-      return true;
-    }
+  while (getline(file, line)) {
+      if (email == line) {
+          return true;
+      }
   }
   return false;
 }
 
-bool Database::CheckCredentials(const string email ,const string password){
+bool Database::CheckCredentials(const string email, const string password) {
   path filePath = GetPath();
   ifstream file(filePath);
-  if(!file) {
-    CheckCredentials(email, password);
+  if (!file.is_open()) {
+      cerr << "Error: Unable to Open File for Reading!" << endl;
+      return false;
   }
+
   string line;
   bool found = false;
-  while(getline(file, line)){
-    if (found){
-      if (toggleEncryption(password) == line){
-        return true;
-        break;
-      } else {
-        return false;
+  while (getline(file, line)) {
+      if (found) {
+          return toggleEncryption(password) == line;
       }
-    }
-    if (email == line){
-      found = true;
-    }
+      if (email == line) {
+          found = true;
+      }
   }
   return false;
 }

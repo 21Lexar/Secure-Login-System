@@ -14,6 +14,7 @@ public:
     void displayMainMenu();
     void clearScreen();
     void wait();
+    bool verifyOTP(OTPGenerator &otpFunc);
     std::string askEmail();
     std::string askPass();
     bool gotOTP();
