@@ -7,6 +7,7 @@
 #include "../include/Database.h"
 #include "../include/Encryption.h"
 #include "../include/OTPGenerator.h"
+#include "../include/SendMail.h"
 
 class LoginManager : public Database{
 public:

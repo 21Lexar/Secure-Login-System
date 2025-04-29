@@ -1,94 +1,47 @@
 #include <iostream>
 #include <string>
-#include <cstring>
 #include <curl/curl.h>
-#include <cstdlib> // For getenv()
+#include <stdlib.h>
+#include "../include/SendMail.h"
+using namespace std;
 
-void send_email(const std::string& receiver_email, const std::string& otp) {
-    CURL *curl;
-    CURLcode res;
-    struct curl_slist *recipients = NULL;
+void sendEmail(const string& receiver_email, const int& otp) {
+    const string api_key = "api-290B2F1BCE8845DDAFD2337D9D0A80CF";
+    const string sender_email = "u2024294@giki.edu.pk";
+    const string sender_name = "Secure Login System";
+    const std::string api_url = "https://api.smtp2go.com/v3/email/send";
 
-    // Email content
-    std::string payload_text =
-        "To: " + receiver_email + "\r\n"
-        "From: Secure-Login-System mirza.khizar.502@gmail.com\r\n"
-        "Subject: Your OTP Code\r\n"
-        "\r\n"
-        "Your OTP code is: " + otp + "\r\n";
+    string json_payload = R"({
+        "api_key": ")" + api_key + R"(",
+        "to": [")" + receiver_email + R"("],
+        "sender": ")" + sender_email + R"(",
+        "subject": "Secure Login System OTP Code",
+        "text_body": "Your OTP is: )" + to_string(otp) + R"(",
+        "from": ")" + sender_name + R"( <)" + sender_email + R"(>"
+    })";
 
-    struct upload_status {
-        size_t bytes_read;
-        const std::string *payload;
-    };
-
-    auto payload_source = [](char *ptr, size_t size, size_t nmemb, void *userp) -> size_t {
-        upload_status *upload_ctx = (upload_status *)userp;
-        const char *data = upload_ctx->payload->c_str() + upload_ctx->bytes_read;
-        size_t room = size * nmemb;
-        size_t len = strlen(data);
-
-        if (len > room)
-            len = room;
-
-        if (len) {
-            memcpy(ptr, data, len);
-            upload_ctx->bytes_read += len;
-            return len;
-        }
-        return 0;
-    };
-
-    struct upload_status upload_ctx = { 0, &payload_text };
-
-    curl = curl_easy_init();
-    if (curl) {
-        const char *smtp_username = std::getenv("SMTP_USERNAME");
-        const char *smtp_password = std::getenv("SMTP_PASSWORD");
-
-        if (!smtp_username || !smtp_password) {
-            std::cerr << "Error: SMTP credentials not set in environment variables." << std::endl;
-            curl_easy_cleanup(curl);
-            return;
-        }
-
-        curl_easy_setopt(curl, CURLOPT_URL, "smtp://smtp.gmail.com:587");
-        curl_easy_setopt(curl, CURLOPT_USERNAME, smtp_username);
-        curl_easy_setopt(curl, CURLOPT_PASSWORD, smtp_password);
-        curl_easy_setopt(curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
-        curl_easy_setopt(curl, CURLOPT_MAIL_FROM, smtp_username);
-
-        recipients = curl_slist_append(recipients, ("<" + receiver_email + ">").c_str());
-        curl_easy_setopt(curl, CURLOPT_MAIL_RCPT, recipients);
-
-        curl_easy_setopt(curl, CURLOPT_READFUNCTION, payload_source);
-        curl_easy_setopt(curl, CURLOPT_READDATA, &upload_ctx);
-        curl_easy_setopt(curl, CURLOPT_UPLOAD, 1L);
-
-        // Enable verbose for debugging
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-        res = curl_easy_perform(curl);
-
-        if (res != CURLE_OK)
-            std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
-        else
-            std::cout << "Email sent successfully to " << receiver_email << std::endl;
-
-        if (recipients)
-            curl_slist_free_all(recipients);
-        curl_easy_cleanup(curl);
-    } else {
-        std::cerr << "Error: Failed to initialize CURL." << std::endl;
+    CURL *curl = curl_easy_init();
+    if (!curl) {
+        std::cerr << "Failed to initialize CURL" << std::endl;
+        return;
     }
-}
 
-int main() {
-    // Set environment variables for testing (remove in production)
-    setenv("SMTP_USERNAME", "mirza.khizar.502@gmail.com", 1);
-    setenv("SMTP_PASSWORD", "lrtj clsf jtza didm", 1);
+    struct curl_slist *headers = NULL;
+    headers = curl_slist_append(headers, "Content-Type: application/json");
 
-    send_email("gigglesafari@gmail.com", "123456");
-    return 0;
+    curl_easy_setopt(curl, CURLOPT_URL, api_url.c_str());
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_payload.c_str());
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_DNS_SERVERS, "8.8.8.8,8.8.4.4");
+
+    CURLcode res = curl_easy_perform(curl);
+    if (res != CURLE_OK) {
+        cerr << "Email sending failed: " << curl_easy_strerror(res) << endl;
+    } else {
+        cout << "Email sent successfully to " << receiver_email << endl;
+    }
+
+    curl_slist_free_all(headers);
+    curl_easy_cleanup(curl);
 }
 

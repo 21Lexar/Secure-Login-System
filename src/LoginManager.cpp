@@ -5,6 +5,7 @@
 #include "../include/Encryption.h"
 #include "../include/OTPGenerator.h"
 #include "../include/LoginManager.h"
+#include "../include/SendMail.h"
 using namespace std;
 
 LoginManager::LoginManager() {
@@ -165,7 +166,7 @@ void LoginManager::registerUser() {
     }
     pass = askPass();
     cout << "Sending OTP to " << email << endl;
-    cout << "OTP: " << otpFunc.getOTP() << endl;
+    sendEmail(email, otpFunc.getOTP());
     if (gotOTP() && verifyOTP(otpFunc)) {
         StoreEmail(email);
         StorePassHash(pass);
@@ -197,7 +198,7 @@ void LoginManager::loginUser() {
     }
     pass = askPass();
     cout << "Sending OTP to " << email << endl;
-    cout << "OTP: " << otpFunc.getOTP() << endl;
+    sendEmail(email, otpFunc.getOTP());
     if (gotOTP() && verifyOTP(otpFunc)) {
         if (CheckCredentials(email, pass)) {
             cout << "Login successful!" << endl;
