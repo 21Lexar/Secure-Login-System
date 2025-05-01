@@ -8,6 +8,7 @@ using namespace std;
 using namespace filesystem;
 
 
+
 Database::Database(){
     filesystem::path outputPath = filesystem::current_path() / "data";
     create_directories(outputPath);
@@ -81,3 +82,13 @@ bool Database::CheckCredentials(const string email, const string password) {
   }
   return false;
 }
+
+void Database::displayREADME(){
+    filesystem::path readmePath = filesystem::current_path() / "README.txt";
+    ifstream file(readmePath);
+    string line;
+  while (getline(file, line)) {
+    cout << line << endl;      
+  }
+}
+

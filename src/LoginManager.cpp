@@ -168,7 +168,7 @@ void LoginManager::registerUser() {
     cout << "Sending OTP to " << email << endl;
     sendEmail(email, otpFunc.getOTP());
     if (gotOTP() && verifyOTP(otpFunc)) {
-        StoreEmail(email);
+        StoreEmail(toggleEncryption(email));
         StorePassHash(pass);
         cout << "Registration successful!" << endl;
     } else {
@@ -179,7 +179,6 @@ void LoginManager::registerUser() {
 
 void LoginManager::loginUser() {
     OTPGenerator otpFunc;
-    Encryption encrypt;
     string email, pass;
     clearScreen();
     cout << endl << endl;
@@ -191,7 +190,7 @@ void LoginManager::loginUser() {
     cout <<"╚══════╝ ╚═════╝  ╚═════╝ ╚═╝╚═╝  ╚═══╝"<< endl;
     cout << endl << endl;
     email = askEmail();
-    if (!CheckEmail(email)) {
+    if (!CheckEmail(toggleEncryption(email))) {
         cout << "Error: Email does not exist. Please Register first." << endl;
         wait();
         return;
@@ -200,8 +199,9 @@ void LoginManager::loginUser() {
     cout << "Sending OTP to " << email << endl;
     sendEmail(email, otpFunc.getOTP());
     if (gotOTP() && verifyOTP(otpFunc)) {
-        if (CheckCredentials(email, pass)) {
+        if (CheckCredentials(toggleEncryption(email), pass)) {
             cout << "Login successful!" << endl;
+            plLoop();
         } else {
             cout << "Error: Invalid credentials. Please try again." << endl;
         }
@@ -209,4 +209,41 @@ void LoginManager::loginUser() {
         cout << "Error: Login failed." << endl;
     }
     wait();
+}
+
+void LoginManager::plMenu(){
+    cout << endl << endl << endl;
+    cout << "██████╗  █████╗ ███████╗██╗  ██╗██████╗  ██████╗  █████╗ ██████╗ ██████╗ \n";
+    cout << "██╔══██╗██╔══██╗██╔════╝██║  ██║██╔══██╗██╔═══██╗██╔══██╗██╔══██╗██╔══██╗\n";
+    cout << "██║  ██║███████║███████╗███████║██████╔╝██║   ██║███████║██████╔╝██║  ██║\n";
+    cout << "██║  ██║██╔══██║╚════██║██╔══██║██╔══██╗██║   ██║██╔══██║██╔══██╗██║  ██║\n";
+    cout << "██████╔╝██║  ██║███████║██║  ██║██████╔╝╚██████╔╝██║  ██║██║  ██║██████╔╝\n";
+    cout << "╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ \n";
+    cout << endl << endl << endl;
+    cout << "1. View README.md" << endl;
+    cout << "2. Log out" << endl;
+    cout << "Enter your choice: ";
+}
+
+void LoginManager::plLoop(){
+    bool flag = true;
+    string plOption;
+    while(flag){
+        clearScreen();
+        plMenu();
+        getline(cin, plOption);
+        if (plOption.empty()) {
+            continue;
+        }
+        switch(plOption[0]){
+            case '1':
+                displayREADME();
+                wait();
+                break;
+            case '2':
+                cout << "Logging out..." << endl;
+                flag = false;
+                break;
+        }
+    }
 }

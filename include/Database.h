@@ -17,6 +17,7 @@ public:
     void StorePassHash(const string);
     bool CheckEmail(const string);
     bool CheckCredentials(const string, const string);
+    void displayREADME();
 };
 
 #endif

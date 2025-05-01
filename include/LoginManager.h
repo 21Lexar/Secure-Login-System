@@ -22,6 +22,8 @@ public:
     void loop();
     void registerUser();
     void loginUser();
+    void plMenu();
+    void plLoop();
 };
 
 #endif // LOGIN_MANAGER_H
