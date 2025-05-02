@@ -244,6 +244,9 @@ void LoginManager::plLoop(){
                 cout << "Logging out..." << endl;
                 flag = false;
                 break;
+            default:
+                cout << "Invalid Option! Try Again.\n";
+                continue;
         }
     }
 }
