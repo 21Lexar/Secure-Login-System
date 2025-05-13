@@ -37,6 +37,25 @@ A terminal-based secure login system developed in C++ that allows users to regis
 
 **OTP Checker:** Ask the user if they have received the OTP or if there is a need to send another OTP.
 
+## **Installation**
+NOTE: The Code is only available for Linux;
+1. Clone the repo using;
+```bash
+git clone https://github.com/21Lexar/Secure-Login-System.git
+cd Secure-Login-System/src
+code SendMail.cpp
+```
+2. Create an accout on SMTP2GO;
+3. Create your API Key;
+4. Verify your sender email;
+5. Paste the your API Key and verified email in the highlighted sections;
+![Code Chunk Screenshot](/img/2025-05-13_14-38.png)
+6. Run the code;
+```bash
+bash build.sh
+./SecureLoginSystem
+```
+
 ## **Contact**
 
 [u2024294@giki.edu.pk](mailto:u2024294@giki.edu.pk)
