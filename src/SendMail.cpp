@@ -6,8 +6,8 @@
 using namespace std;
 
 void sendEmail(const string& receiver_email, const int& otp) {
-    const string api_key = "api-290B2F1BCE8845DDAFD2337D9D0A80CF";
-    const string sender_email = "u2024294@giki.edu.pk";
+    const string api_key = ""; // Enter your SMTP2GO API key here
+    const string sender_email = ""; // Enter your verified sender email here
     const string sender_name = "Secure Login System";
     const std::string api_url = "https://api.smtp2go.com/v3/email/send";
 
